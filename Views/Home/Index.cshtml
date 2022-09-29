@@ -1,0 +1,63 @@
+﻿@using Divisions.Dal.Dbo
+@using static Divisions.Dal.BoolExtension
+@model IEnumerable<DivisionDbo>
+@{
+    ViewBag.Title = "Список подразделений";
+}
+
+<h2>Список подразделений</h2>
+<p>
+        <input id='myInput' onkeyup='searchTable()' type='text'>
+
+<table id='myTable'>
+    <tr>
+        <th>Наименование подразделения </th>
+        <th>Статус</th>
+        <th>Входит в подразделение</th>      
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @item.Name
+            </td>
+            <td>
+                @item.Status.BoolString()
+            </td>
+            <td>
+                @if (item.ParentDivision != null)
+                {
+                    @item.ParentDivision.Name;
+                }
+            </td>
+
+        </tr>
+    }
+</table>
+<script>
+function searchTable() {
+    var input, filter, found, table, tr, td, i, j;
+    input = document.getElementById("myInput");
+    filter = input.value.toUpperCase();
+    table = document.getElementById("myTable");
+    tr = table.getElementsByTagName("tr");
+    for (i = 0; i < tr.length; i++) {
+        td = tr[i].getElementsByTagName("td");
+        for (i = 0; i < tr.length; i++) {
+            td = tr[i].getElementsByTagName("td")[0];
+            if (td) {
+                if (td.innerHTML.toUpperCase().indexOf(filter) > -1) {
+                    tr[i].style.display = "";
+                } else {
+                    tr[i].style.display = "none";
+                }
+            }
+        }
+    }
+}
+</script>
+</p>
+<p>
+<button type="button" onclick="location.href='@Url.Action("DataSynchronization", "Home")'" >Синхронизация данных</button/>
+</p>
